@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OpenNMS Dashboard</title>
+    <!-- <meta http-equiv="refresh" content="15" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+   	<style>
+   	body{
+   		background-color: #E0E0E0;
+   		height: 1080px;
+   		/*background: white;  For browsers that do not support gradients */
+    background: -webkit-linear-gradient(white, gray); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(white,gray); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(white,gray); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(white,gray); /* Standard syntax (must be last) */
+   	}
+   	#heading{
+   		 height: 80px;
+    background: white; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(green, white); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(green, white); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(green, white); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(green, white); /* Standard syntax (must be last) */
+   	}
+
+#env{
+	width: 25%;
+	 position: relative;
+	 display: inline-block;	
+	 float: left;
+	 clear: both;
+   
+}
+#envnamestrue{
+	width: 200px;
+	background-color: #FF3232;
+	height: auto;
+}
+#envnamesfalse{
+	width: 200px;
+	background-color: #32CD32;
+	height: auto;
+}
+
+#vmnamestrue{
+  background-color: #FF3232;
+  max-width: 300px;
+  height: auto;
+}
+
+#vmnamesfalse{
+  background-color: #32CD32;
+  max-width: 300px;
+  height: auto;
+}
+
+#servicenamestrue{
+	font-family: Georgia;
+	background-color: #FF3232;
+	max-width: 280px;
+	height: auto;
+
+
+}
+#servicenamesfalse{
+	font-family: Georgia;
+	background-color: #32CD32;
+	max-width: 280px;
+	height: auto;
+
+}
+
+
+
+
+h1{
+	text-decoration: bold;
+}
+
+#info{
+	width: 50%;
+	height: 20px;
+	display: inline-block;
+	float: right;
+	clear: both;
+	text-align: left;
+	margin-top: 10px;
+}
+
+#servicedata{
+	background: #CACACA;
+	max-width: 280px;
+	height: auto;
+}
+   	 #cont {display: none; }
+      .show:focus + .hide {display: inline; }
+      .show:focus + .hide + #cont {display: block;}
+
+button{
+	background-color: gray;
+}
+   	</style>
+   <!--/*<style>
+		body {
+			font: 15px arial, helvetica, sans-serif;
+			background: #333;
+			color: #fff;
+		}
+	
+		a {
+			color: #06c;
+		}
+	
+		ul {
+			padding: 0;
+			margin: 0;
+			background: #fff;
+			float: left;
+		}
+	
+		li {
+			float: left;
+			display: inline;
+			position: relative;
+			width: 150px;
+			list-style: none;
+		}
+	
+		ul ul {
+			position: absolute;
+			left: 0;
+			top: 100%;
+			background: #ccc;
+			display: none;
+		}
+	
+		ul ul ul {
+			left: 100%;
+			top: 0;
+			background: #999;
+		}
+	
+		li:hover > ul {
+			display: block;
+		}
+	
+	
+		p {
+			clear: left;
+			padding-top: 1em;
+		}
+	</style>*/-->
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>
