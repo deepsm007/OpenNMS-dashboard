@@ -24,9 +24,9 @@ end
               x="amber"
           end
 
-        if cpuColor.include? "red" || x.include? "red" || memoryColor.include? "red"
+        if cpuColor.include? 'red' || (x.include? 'red') || (memoryColor.include? 'red')
           return "red"
-        elsif cpuColor.include? "green" || x.include? "green" || memoryColor.include? "green"
+        elsif cpuColor.include? 'green' || (x.include? 'green') || (memoryColor.include? 'green')
           return "green"
         else
           return "amber"
@@ -180,7 +180,7 @@ end
 def isYes(drive)
  require 'yaml' 
 @config = YAML.load_file('config.yml')
-  if  @config[drive+"_drive"].include? "yes"
+  if  @config[drive+"_drive"].include? 'yes'
     return true
   else
     return false
@@ -189,4 +189,4 @@ def isYes(drive)
 end
 
 # performance monitor end
-end
+
