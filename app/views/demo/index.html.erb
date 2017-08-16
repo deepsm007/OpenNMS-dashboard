@@ -129,36 +129,45 @@
 									
 									<script>
 																	
-									
-
-
-
-
+									function colourChnage(env,vm,service) {
+										if('${p:getColor()}' != "red"){
+											if('${p:getColor()}' != "amber" && colour!="amber"){
+												colour = "green";
+											}else{
+												colour = "amber";
+											}
+										}else {
+											colour = "red";
+										}
+										
+										setValue = service+colour;
+										console.log(setValue);
+										$('button[name="'+env+'"]').attr('colour',setValue);
+										$('button[name="'+env+vm+'"]').attr('colour',service+'${p:getColor()}');
+										
+										
+									}
+									colourChnage('<%=@envArray[i]['name']%>','<%=vmArray[j]['label']%>','<%=vmMap[vmArray[j]['label']][k]['down']%>');
 									</script>
-									<button id="servicenames"
-										colour="<%=@vmMap[vmArray[j]['label']][k]["down"]%>"
-										onclick="myFunction('<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><%=@vmMap[vmArray[j]['label']][k]['serviceType']['name']')"
-										class="w3-btn w3-block w3-left-align">
-										<b>></b> <b><i>${vmMap.get(vm.get(j).get('label')).get(z).get('serviceType').get('name')}</i></b>
+								
+<button id="servicenames" class="w3-btn w3-block w3-left-align" colour="<%=@vmMap[vmArray[j]['label']][k]["down"]%>" onclick="myFunction(<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><%=@vmMap[vmArray[j]['label']][k]['serviceType']['name']%>)"></button>>
 
-									</button>
+
 									<div
-										id="${envs.get(index).get('name')}${vm.get(j).get('label')}${vmMap.get(vm.get(j).get('label')).get(z).get('serviceType').get('name')}"
+										id="<%=envArray[i]['name']%><%=vmArray[j]['label']%><<%=@vmMap[vmArray[j]['label']][k]["serviceType"]['name']%>"
 										class="w3-container w3-hide" style="padding-left: 40px;">
 
-										<c:choose>
-											<c:when
-												test="${vmMap.get(vm.get(j).get('label')).get(z).get('down')}">
+<%if @vmMap[vmArray[j]['label']][k]["down"]%>
+									
 												<b><i>Service is Down</i></b>
-											</c:when>
-											<c:otherwise>
+											
+											<%else%>
 												<b><i>Service is UP</i></b>
-											</c:otherwise>
-										</c:choose>
+										<%end%>
 
 									</div>
 
-								</c:forEach>
+								<%end%>
 
 
 
