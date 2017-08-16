@@ -35,7 +35,7 @@ end
 
 def getCPUusage(id)
 require 'yaml' 
-@config = YAML.load_file('config.yml')
+@config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
    response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].nodeSnmp[]/cpuPercentBusy?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
@@ -179,7 +179,7 @@ end
 
 def isYes(drive)
  require 'yaml' 
-@config = YAML.load_file('config.yml')
+@config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
   if  @config[drive+"_drive"].include? 'yes'
     return true
   else
