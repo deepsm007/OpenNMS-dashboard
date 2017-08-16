@@ -60,7 +60,7 @@
 
 					<% for j in 0..((@vmArray.length)-1) %>
 						<%if @vmArray[j]['foreignSource'] == @envArray[i]['name']%>
-							<%="yet to code"%>
+							<% clearStorageList%>
 							<button id="vmnames" colour="false"
 								onclick="myFunction('<%=@envArray[i]['name']%><%=@vmArray[j]['label']%>')"
 								class="w3-btn w3-block w3-left-align"
@@ -73,24 +73,25 @@
 
 
 								<br> <b>Details</b> <br> <br> <b>></b> Average
-								CPU usage (last 10 mins): <%="${p:getCPUusage(vm.get(j).get('id'))}"%>%<br>
-								<br> <b>></b> Total Memory used :
-								<%="${p:getPhysicalMemoryUsed(vm.get(j).get('id'))}"%>% <br />
-								
+								CPU usage (last 10 mins): <%=getCPUusage(@vmArray[j]['id'])}%>%<br>
+								<br> <b>></b> Total Memory used : <%=getPhysicalMemoryUsed(@vmArray[j]['id'])}%>% <br />
+								<% if isYes('C')%>
 									<b>></b> Storage Utilized on C drive :
 								 <br />
 									<br>
-								
+								<%end%>
 									<br>
+									<%if isYes('D')%>
 									<b>></b> Storage Utilized on D drive :
 								 <br />
 									<br>
-								
+								<%end%>
 									<br>
+									<%if isYes('E')%>
 									<b>></b> Storage Utilized on E drive :
 							 <br />
 									<br>
-							
+							<%end%>
 								<b>></b> <%=@vmArray[j]['sysDescription']%> <br>
 
 <%dataname = @envArray[i]['name']
@@ -130,8 +131,8 @@
 									<script>
 																	
 									function colourChnage(env,vm,service) {
-										if('${p:getColor()}' != "red"){
-											if('${p:getColor()}' != "amber" && colour!="amber"){
+										if('<%=getColor%>' != "red"){
+											if('<%=getColor%>'  != "amber" && colour!="amber"){
 												colour = "green";
 											}else{
 												colour = "amber";
@@ -143,7 +144,7 @@
 										setValue = service+colour;
 										console.log(setValue);
 										$('button[name="'+env+'"]').attr('colour',setValue);
-										$('button[name="'+env+vm+'"]').attr('colour',service+'${p:getColor()}');
+										$('button[name="'+env+vm+'"]').attr('colour',service+'<%=getColor%>');
 										
 										
 									}
@@ -168,12 +169,6 @@
 									</div>
 
 								<%end%>
-
-
-
-
-
-								
 							</div>
 							<hr>
 							<%end%>
