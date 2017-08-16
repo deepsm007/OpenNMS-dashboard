@@ -4,7 +4,8 @@ class DemoController < ApplicationController
 require 'net/http'
 require 'net/https'
 require 'uri'
-
+require 'yaml' 
+@config = YAML.load_file('config.yml')
   	require 'rest-client'
       require 'json'
 
@@ -301,9 +302,9 @@ def getCPUusage(id)
 
       averageCPU = (min + max) / 2
 
-      if averageCPU <= CPU_minimum_percentage
+      if averageCPU <= @config['CPU_minimum_percentage']
         cpuColor = "green"
-      elsif averageCPU > CPU_minimum_percentage && averageCPU <= CPU_maximum_percentage
+      elsif averageCPU > @config['CPU_minimum_percentage'] && averageCPU <= @config['CPU_maximum_percentage']
         cpuColor = "amber"
       else
         cpuColor = "red"
@@ -348,9 +349,9 @@ def getPhysicalMemoryUsed(id)
 
       percentmemoryUsed = (memoryUsed * 1.0/totalMemory) * 100.0
 
-       if percentmemoryUsed <= Memory_minimum_percentage
+       if percentmemoryUsed <= @config['Memory_minimum_percentage']
           memoryColor = "green"
-        elsif percentmemoryUsed > Memory_minimum_percentage && percentmemoryUsed <= Memory_maximum_percentage
+        elsif percentmemoryUsed > @config['Memory_minimum_percentage'] && percentmemoryUsed <= @config['Memory_maximum_percentage']
           memoryColor = "amber"
         else
           memoryColor = "red"
@@ -397,9 +398,9 @@ storageUsed = sum / count
 if storageUsed != 0
   percentStorageUsed = (storageUsed * 1.0 / totalStorage) * 100.0
 
-   if percentStorageUsed <= Memory_minimum_percentage
+   if percentStorageUsed <= @config['Memory_minimum_percentage']
           memoryColor = "green"
-        elsif percentStorageUsed > Memory_minimum_percentage && percentStorageUsed <= Memory_maximum_percentage
+        elsif percentStorageUsed > @config['Memory_minimum_percentage'] && percentStorageUsed <= @config['Memory_maximum_percentage']
           memoryColor = "amber"
         else
           memoryColor = "red"
@@ -417,8 +418,8 @@ if storageUsed != 0
 end
 
 def isYes(drive)
-
-  if drive+"_drive".include? "yes"
+ 
+  if  @config[drive+"_drive"].include? "yes"
     return true
   else
     return false

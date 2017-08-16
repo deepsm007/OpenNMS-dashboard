@@ -1,0 +1,7 @@
+CPU_maximum_percentage=70
+CPU_minimum_percentage=40
+C_drive=yes
+D_drive=yes
+E_drive=yes
+Memory_maximum_percentage=80
+Memory_minimum_percentage=50
