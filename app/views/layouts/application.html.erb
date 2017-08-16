@@ -2,156 +2,128 @@
 <html>
   <head>
     <title>OpenNMS Dashboard</title>
-    <!-- <meta http-equiv="refresh" content="15" /> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="300" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-   	<style>
-   	body{
-   		background-color: #E0E0E0;
-   		height: 1080px;
-   		/*background: white;  For browsers that do not support gradients */
-    background: -webkit-linear-gradient(white, gray); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(white,gray); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(white,gray); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(white,gray); /* Standard syntax (must be last) */
-   	}
-   	#heading{
-   		 height: 80px;
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(green, white); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(green, white); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(green, white); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(green, white); /* Standard syntax (must be last) */
-   	}
+<style>
+#heading {
+	height: 50px;
+	background: white; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(green, white);
+	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(green, white);
+	/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(green, white);
+	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(green, white);
+	/* Standard syntax (must be last) */
+}
 
-#env{
+#env {
 	width: 25%;
-	 position: relative;
-	 display: inline-block;	
-	 float: left;
-	 clear: both;
-   
-}
-#envnamestrue{
-	width: 200px;
-	background-color: #FF3232;
-	height: auto;
-}
-#envnamesfalse{
-	width: 200px;
-	background-color: #32CD32;
-	height: auto;
+	position: relative;
+	display: inline-block;
+	float: left;
+	clear: both;
 }
 
-#vmnamestrue{
-  background-color: #FF3232;
-  max-width: 300px;
-  height: auto;
-}
-
-#vmnamesfalse{
-  background-color: #32CD32;
-  max-width: 300px;
-  height: auto;
-}
-
-#servicenamestrue{
+button[colour="true"] {
 	font-family: Georgia;
-	background-color: #FF3232;
+	background-color: #FF1919;
 	max-width: 280px;
 	height: auto;
-
-
 }
-#servicenamesfalse{
+
+button[colour="trueamber"] {
 	font-family: Georgia;
-	background-color: #32CD32;
+	background-color: #FF1919;
 	max-width: 280px;
 	height: auto;
-
 }
 
+button[colour="falseamber"] {
+	font-family: Georgia;
+	background-color: #FF9400;
+	max-width: 280px;
+	height: auto;
+}
 
+button[colour="truered"] {
+	font-family: Georgia;
+	background-color: #FF1919;
+	max-width: 280px;
+	height: auto;
+}
 
+button[colour="falsered"] {
+	font-family: Georgia;
+	background-color: #FF1919;
+	max-width: 280px;
+	height: auto;
+}
 
-h1{
+button[colour="truegreen"] {
+	font-family: Georgia;
+	background-color: #FF1919;
+	max-width: 280px;
+	height: auto;
+}
+
+button[colour="falsegreen"] {
+	font-family: Georgia;
+	background-color: #198C19;
+	max-width: 280px;
+	height: auto;
+}
+
+button[colour="false"] {
+	font-family: Georgia;
+	background-color: #198C19;
+	max-width: 280px;
+	height: auto;
+}
+
+h1 {
 	text-decoration: bold;
 }
 
-#info{
+#info {
 	width: 50%;
 	height: 20px;
 	display: inline-block;
 	float: right;
 	clear: both;
 	text-align: left;
-	margin-top: 10px;
 }
 
-#servicedata{
+#servicedata {
 	background: #CACACA;
 	max-width: 280px;
 	height: auto;
 }
-   	 #cont {display: none; }
-      .show:focus + .hide {display: inline; }
-      .show:focus + .hide + #cont {display: block;}
 
-button{
+#cont {
+	display: none;
+}
+
+.show:focus+.hide {
+	display: inline;
+}
+
+.show:focus+.hide+#cont {
+	display: block;
+}
+
+button {
 	background-color: gray;
 }
-   	</style>
-   <!--/*<style>
-		body {
-			font: 15px arial, helvetica, sans-serif;
-			background: #333;
-			color: #fff;
-		}
-	
-		a {
-			color: #06c;
-		}
-	
-		ul {
-			padding: 0;
-			margin: 0;
-			background: #fff;
-			float: left;
-		}
-	
-		li {
-			float: left;
-			display: inline;
-			position: relative;
-			width: 150px;
-			list-style: none;
-		}
-	
-		ul ul {
-			position: absolute;
-			left: 0;
-			top: 100%;
-			background: #ccc;
-			display: none;
-		}
-	
-		ul ul ul {
-			left: 100%;
-			top: 0;
-			background: #999;
-		}
-	
-		li:hover > ul {
-			display: block;
-		}
-	
-	
-		p {
-			clear: left;
-			padding-top: 1em;
-		}
-	</style>*/-->
-  </head>
+</style>
+<script>
+function showLogin() {
+	document.getElementById("error").style.display='inline';
+}
+</script>
+</head>
 
   <body>
     <%= yield %>

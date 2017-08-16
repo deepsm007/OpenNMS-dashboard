@@ -5,24 +5,116 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 
-require 'net_http_ssl_fix'
-
   	require 'rest-client'
       require 'json'
-
-
-
-
-
-
-
-
 
       responseHash = Hash.new
 idIPHash = Hash.new
 idArray = Array.new
+@environments = Array.new
 
-# key = node id , val = isDown?
+@envArray = Array.new
+response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/foreignSources/", user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+
+@value= data_hash = JSON.parse(response.body)
+@envArray = @value['foreignSources']
+@value['foreignSources'].each do |x|
+ @environments.push(x['name'])
+end
+
+#array of key value pair of env (repeated)and node id
+valueArray = Array.new 
+
+response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/nodes/", user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+
+#key = id, value = node name
+idNodeHash = Hash.new
+@vmArray = Array.new
+
+
+@value= data_hash = JSON.parse(response.body)
+
+# puts @value
+
+@vmArray = @value['node']
+
+# puts vmArray
+
+ @value['node'].each do |x|
+ # key= name , value = id of vm
+ idEnvHash = Hash.new
+  idNodeHash[x['id']] = x['label']
+if x['foreignSource']!=nil
+  idEnvHash[x['foreignSource']] = x['id']
+else
+  idEnvHash[nil] = x['id']
+  end
+  valueArray.push(idEnvHash)
+
+end
+
+# puts valueArray
+
+servicesArray = Array.new
+ipInterfaceArray = Array.new
+@vmMap = Hash.new
+
+@vmArray.each do |x|
+response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/nodes/"+x['id']+ "/ipinterfaces/", user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+@value= data_hash = JSON.parse(response.body)
+
+ipInterfaceArray = @value['ipInterface']
+
+response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/nodes/"+x['id']+ "/ipinterfaces/"+ipInterfaceArray.first['ipAddress']+ "/services/", user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+@value= data_hash = JSON.parse(response.body)
+  
+servicesArray = @value["service"]
+@vmMap[x['label']]=servicesArray
+  end
+
+response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/outages", user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+@value= data_hash = JSON.parse(response.body)
+
+outageArray = Array.new
+
+outageArray = @value['outage']
+
+responseList = Array.new
+
+ @startTime = (DateTime.now.strftime('%Q').to_i-600000).to_s
+  @endTime = (DateTime.now.strftime('%Q')).to_s
+
+
+
+
+
+@vmArray.each do |x|
+puts x['id']
+ url = "http://10.102.84.101:8980/opennms/rest/measurements/node%5B"+x['id']+"%5D.nodeSnmp%5B%5D/cpuPercentBusy?start="+@startTime+"&maxrows=30"
+
+  puts url
+begin  # "try" block
+
+response = RestClient::Request.execute method: :get, url: url, user: 'admin',
+     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
+
+@value= data_hash = JSON.parse(response.body)
+puts @value
+responseList.push(@value)
+rescue # optionally: `rescue Exception => ex`
+    puts 'I am rescued.'
+end
+# if x['id']!="235"
+end
+
+
+
+
 @nodeDownHash = Hash.new
 
 response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/nodes/", user: 'admin',
@@ -58,31 +150,10 @@ end
 @nodeDownHash[id]=availHash
 end  
 
-response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/nodes/", user: 'admin',
-     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
-
-#key = id, value = node name
-idNodeHash = Hash.new
-
-
-#array of key value pair of env (repeated)and node id
-valueArray = Array.new 
-
-@value= data_hash = JSON.parse(response.body)
-
- @value['node'].each do |x|
- # key= name , value = id of vm
- idEnvHash = Hash.new
-  idNodeHash[x['id']] = x['label']
-
-  idEnvHash[x['foreignSource']] = x['id']
-  valueArray.push(idEnvHash)
-end
 
 
 
-# key = env name , value = isDown 
-envArray = Array.new
+
 #key = vmID, value = isDown
 vmDownHash = Hash.new
 
@@ -100,22 +171,11 @@ if x == false
 end
     end
 end
-#
+
 # puts vmDownHash
 
-# puts valueArray.first["Dev CFG"]
-envArray = Array.new
-response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/foreignSources/", user: 'admin',
-     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
-
-@value= data_hash = JSON.parse(response.body)
-@value['foreignSources'].each do |x|
- envArray.push(x['name'])
-end
-
-# puts envArray
 someHash = Hash.new
-envArray.each do |x|
+@envArray.each do |x|
   # puts x
   someArray=Array.new 
   valueArray.each do |y|
@@ -142,40 +202,88 @@ break
   end
     envStatusArray.push(x.to_s)
 end
-isDown = "false"
 
 
-  @html_data = ""
+puts envStatusArray
 
-       opennms_url = "http://10.102.84.101:8980/opennms/rest/"
 
-    # Getting the environment
-       response = RestClient::Request.execute method: :get, url: opennms_url+"foreignSources", user: 'admin',
-     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
-  
-      env_response_hash = JSON.parse(response.body)
-      @env_responseData=env_response_hash['foreignSources']
 
-      # Getting VM response
-       response = RestClient::Request.execute method: :get, url: opennms_url+"nodes", user: 'admin',
-     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
-  
-      vm_response_hash = JSON.parse(response.body)
-      @vm_responseData=vm_response_hash['node']
 
-       response = RestClient::Request.execute method: :get, url: opennms_url+"outages", user: 'admin',
-     password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
-  
-      outage_response_hash = JSON.parse(response.body)
-      @outage_responseData=outage_response_hash['outage']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# key = node id , val = isDown?
+
+
+# puts vmDownHash
+
+# puts valueArray.first["Dev CFG"]
+
+
+# puts envArray
+
+# isDown = "false"
+
+
+
+  end
+
+  def something 
+    @html_data = ""
+
 
      # puts "Length"
      # puts @outage_responseData.length
      # Env loop
      for i in 0..((@env_responseData.length)-1) 
 
-            @html_data = @html_data + "<button id=\"envnames"+envStatusArray[i]+"\" onclick=\"myFunction('"+@env_responseData[i]['name']+"')\" class=\"w3-btn w3-block w3-left-align\"> <b>> <i>"+@env_responseData[i]['name']+"</i></b>
-             </button><div id=\""+@env_responseData[i]['name']+"\" class=\"w3-container w3-hide\"><br/>&nbsp;&nbsp;Name and details of associated VM<br/>"
+            @html_data = @html_data + "<button id=envnames colour="+envStatusArray[i]+"onclick=\"myFunction('"+@env_responseData[i]['name']+"')\" class=\"w3-btn w3-block w3-left-align\" name=\""+@env_responseData[i]['name']+"\"> <b>> <i>"+@env_responseData[i]['name']+"</i></b>
+             </button><div id=\""+@env_responseData[i]['name']+"\" class=\"w3-container w3-hide\" style=\"padding-left: 40px;\">  <br />
+          <h4>
+            <b>></b> Name and details of associated VM
+          </h4>
+          <br />"
 
           # VM loop
            for j in 0..((@vm_responseData.length)-1) 
@@ -202,7 +310,7 @@ isDown = "false"
   
       cpuUsage_hash = JSON.parse(response.body)
       @cpuUsage_responseData=cpuUsage_hash
-
+# puts cpuUsage_hash
 
                        @html_data = @html_data + " Host Name: <b>"+@interface_responseData.first['hostName']+"</b><br/> <p>"
                        if @vm_responseData[j]['sysDescription']==nil 
@@ -221,8 +329,7 @@ isDown = "false"
 
 # if !@interface_responseData.first['hostName'].include? "10.102"
 if @vm_responseData[j]['sysDescription']!=nil
-  starttime = (DateTime.now.strftime('%Q').to_i-600000).to_s
-  endtime = (DateTime.now.strftime('%Q')).to_s
+ 
 
 
                         @html_data = @html_data + "<div>
@@ -289,4 +396,5 @@ end
         @html_data = @html_data + "</div><hr/>"
      end
   end
+
 end

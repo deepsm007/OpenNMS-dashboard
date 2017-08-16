@@ -5,16 +5,173 @@
 	<title>Dropdowns 2: Multiple levels</title>
 	
 </head>
-
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <body>
 
-	<div id="heading" style="padding-left: 20px;"><b><h1><u>Dashboard</u></h1></b></div>
+ <div id="heading" style="padding-left: 20px;">
+		<b><h1>
+				<u>Dashboard</u>
+			</h1></b>
+</div>
+
 <div id="container">
-	<div id="info" class="info">The colour indicates the behaviour of a service in a particular Environment.<br/><b style="color:green;">Green: </b>Indicates service is running properly<br/><b style="color:red;">Red: </b>Indicates service is down</div>
-	
-	<div id="env" style="padding-left: 40px; width:auto;"><h3><b>></b> List of Environment</h3>
+	<div id="info" class="info">
+			The colour indicates the behaviour of a service in a particular
+			Environment.<br /> <b style="color: green;">Green: </b>Indicates
+			service is healthy<br /> <b style="color: #FF9400;">Amber: </b>Indicates
+			below normal health<br /> <b style="color: red;">Red: </b>Indicates
+			service is down
+		<div id="error" class="errormsg" style="display: none;">
+				<h3>
+					<b>To view the graphs, please log in to the OpenNMS web console</b>
+				</h3>
+		</div>
+	</div>
+
+
+<div id="env" style="padding-left: 40px;">
+			<h3>
+				<b>></b> List of Environment
+			</h3>
   		
-			<%=@html_data.html_safe%>
+
+
+	<% for i in 0..((@environments.length)-1) %>
+	<script>
+	var colour = "green";
+	</script>
+	<button id="envnames" colour="false"
+					onclick="myFunction('<%=@envArray[i]['name']%>')"
+					class="w3-btn w3-block w3-left-align"
+					name="<%=@envArray[i]['name']%>">
+					<b><i>> <%=@envArray[i]['name']%></i></b>
+				</button>
+				
+
+				<div id="<%=@envArray[i]['name']%>"
+					class="w3-container w3-hide" style="padding-left: 40px;">
+
+					<br />
+					<h4>
+						<b>></b> Name and details of associated VM
+					</h4>
+					<br />
+
+					<% for j in 0..((@vmArray.length)-1) %>
+						<%if @vmArray[j]['foreignSource'] == @envArray[i]['name']%>
+							<%="yet to code"%>
+							<button id="vmnames" colour="false"
+								onclick="myFunction('<%=@envArray[i]['name']%><%=@vmArray[j]['label']%>')"
+								class="w3-btn w3-block w3-left-align"
+								name="<%=@envArray[i]['name']%><%=@vmArray[j]['label']%>">
+								<b>></b> <b><i> <%=@vmArray[j]['label']%></i></b>
+							</button>
+<div id="<%=@envArray[i]['name']%><%=@vmArray[j]['label']%>"
+								class="w3-container w3-block w3-hide"
+								style="padding-left: 40px;">
+
+
+								<br> <b>Details</b> <br> <br> <b>></b> Average
+								CPU usage (last 10 mins): <%="${p:getCPUusage(vm.get(j).get('id'))}"%>%<br>
+								<br> <b>></b> Total Memory used :
+								<%="${p:getPhysicalMemoryUsed(vm.get(j).get('id'))}"%>% <br />
+								
+									<b>></b> Storage Utilized on C drive :
+								 <br />
+									<br>
+								
+									<br>
+									<b>></b> Storage Utilized on D drive :
+								 <br />
+									<br>
+								
+									<br>
+									<b>></b> Storage Utilized on E drive :
+							 <br />
+									<br>
+							
+								<b>></b> <%=@vmArray[j]['sysDescription']%> <br>
+
+<%dataname = @envArray[i]['name']
+                          nameOfEnv = dataname.split(" ")%>
+								<div>
+									<table cellpadding="5" cellspacing="5">
+										<tr>
+											<td><img class="graphImg"
+												src="http://10.102.84.101:8980/opennms/graph/graph.png?resourceId=node%5B<%=nameOfEnv[0]%><%=nameOfEnv[1]%>%253A<%=@vmArray[j]['foreignId']%>%5D.nodeSnmp%5B%5D&amp;report=microsoft.cpuPercentBusy&amp;start=<%=@startTime%>&amp;end=<%=@endTime%>&amp;width=499&amp;height=220"
+												alt="Resource graph: CPU Utilization"
+												onError="showLogin();this.onerror=null;this.style.display='none';" /></td>
+											<td><img class="graphImg"
+												src="http://10.102.84.101:8980/opennms/graph/graph.png?resourceId=node%5B<%=nameOfEnv[0]%><%=nameOfEnv[1]%>%253A<%=@vmArray[j]['foreignId']%>%5D.hrStorageIndex%5BPhysicalMemory%5D&amp;report=mib2.storage.usage&amp;start=<%=@startTime%>&end=<%=@endTime%>&width=487&height=137"
+												alt="Resource graph: Storage Utilization"
+												onError="this.onerror=null;this.style.display='none';" /></td>
+										</tr>
+										<tr>
+											<td><img class="graphImg"
+												src="http://10.102.84.101:8980/opennms/graph/graph.png?resourceId=node%5B<%=nameOfEnv[0]%><%=nameOfEnv[1]%>%253A<%=@vmArray[j]['foreignId']%>%5D.hrStorageIndex%5BC%5D&amp;report=mib2.storage.usage&amp;start=<%=@startTime%>&amp;end=<%=@endTime%>&amp;width=487&amp;height=172"
+												alt="Resource graph: Storage Utilization"
+												onError="this.onerror=null;this.style.display='none';" /></td>
+											<td><img class="graphImg"
+												src="http://10.102.84.101:8980/opennms/graph/graph.png?resourceId=node%5B<%=nameOfEnv[0]%><%=nameOfEnv[1]%>%253A<%=@vmArray[j]['foreignId']%>%5D.hrStorageIndex%5BD%5D&amp;report=mib2.storage.usage&amp;start=<%=@startTime%>&amp;end=<%=@endTime%>&amp;width=487&amp;height=172"
+												alt="Resource graph: Storage Utilization"
+												onError="this.onerror=null;this.style.display='none';" /></td>
+										</tr>
+									</table>
+									<br />
+									<h4>
+										<b>></b> Associated Services
+									</h4>
+									<br />
+								</div>
+									
+ <%for k in 0..((@vmMap.length)-1)%>
+									
+									<script>
+																	
+									
+
+
+
+
+									</script>
+									<button id="servicenames"
+										colour="<%=@vmMap[vmArray[j]['label']][k]["down"]%>"
+										onclick="myFunction('<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><%=@vmMap[vmArray[j]['label']][k]['serviceType']['name']')"
+										class="w3-btn w3-block w3-left-align">
+										<b>></b> <b><i>${vmMap.get(vm.get(j).get('label')).get(z).get('serviceType').get('name')}</i></b>
+
+									</button>
+									<div
+										id="${envs.get(index).get('name')}${vm.get(j).get('label')}${vmMap.get(vm.get(j).get('label')).get(z).get('serviceType').get('name')}"
+										class="w3-container w3-hide" style="padding-left: 40px;">
+
+										<c:choose>
+											<c:when
+												test="${vmMap.get(vm.get(j).get('label')).get(z).get('down')}">
+												<b><i>Service is Down</i></b>
+											</c:when>
+											<c:otherwise>
+												<b><i>Service is UP</i></b>
+											</c:otherwise>
+										</c:choose>
+
+									</div>
+
+								</c:forEach>
+
+
+
+
+
+								
+							</div>
+							<hr>
+							<%end%>
+							<%end%>
+
+				</div>
+				<%end%>
 		</div>
 </div>
 
@@ -27,6 +184,8 @@ function myFunction(id) {
         x.className = x.className.replace(" w3-show", "");
     }
 }
-</script>
+</script> 
+
+
 
 </body> </html>
