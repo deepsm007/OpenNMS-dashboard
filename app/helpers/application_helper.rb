@@ -34,9 +34,10 @@ end
    end
 
 def getCPUusage(id)
+  starttime = (DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
 @config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
-   response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].nodeSnmp[]/cpuPercentBusy?start="+starttime, user: 'admin',
+   response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].nodeSnmp[]/cpuPercentBusy?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
       cpuPercentBusy_response_hash = JSON.parse(response.body)
@@ -71,9 +72,10 @@ require 'yaml'
 end
 
 def getPhysicalMemoryUsed(id)
+  starttime = (DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
 @config = YAML.load_file('config.yml')
-  response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].hrStorageIndex[PhysicalMemory]/hrStorageSize?start="+starttime, user: 'admin',
+  response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex[PhysicalMemory]/hrStorageSize?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
       hrStorageSize_response_hash = JSON.parse(response.body)
@@ -87,7 +89,7 @@ require 'yaml'
         end
       end
 
-      response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].hrStorageIndex[PhysicalMemory]/hrStorageUsed?start="+starttime, user: 'admin',
+      response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex[PhysicalMemory]/hrStorageUsed?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
       hrStorageUsed_response_hash = JSON.parse(response.body)
@@ -121,9 +123,10 @@ require 'yaml'
 end
 
 def getStorageUsed(id , drive)
+  starttime=(DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
 @config = YAML.load_file('config.yml')
-   response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].hrStorageIndex["+ drive + "]/hrStorageSize?start=" +starttime, user: 'admin',
+   response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex["+ drive + "]/hrStorageSize?start=" +starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
       hrStorageSize_response_hash = JSON.parse(response.body)
@@ -137,7 +140,7 @@ totalStorage = 0
         end
       end
 
-      response = RestClient::Request.execute method: :get, url: opennms_url+"measurements/node["+id+ "].hrStorageIndex["+ drive + "]/hrStorageSize?start=" +starttime, user: 'admin',
+      response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex["+ drive + "]/hrStorageSize?start=" +starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
       hrStorageSize_response_hash = JSON.parse(response.body)
