@@ -5,7 +5,7 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 require 'yaml' 
-@config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
+@config = YAML.load_file(Rails.root.join('config/config.yml'))
   	require 'rest-client'
       require 'json'
 

@@ -36,7 +36,7 @@ end
 def getCPUusage(id)
   starttime = (DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
-@config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
+@config = YAML.load_file(Rails.root.join('config/config.yml'))
    response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].nodeSnmp[]/cpuPercentBusy?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
@@ -74,7 +74,7 @@ end
 def getPhysicalMemoryUsed(id)
   starttime = (DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
-@config = YAML.load_file('config.yml')
+@config = YAML.load_file(Rails.root.join('config/config.yml'))
   response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex[PhysicalMemory]/hrStorageSize?start="+starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
@@ -125,7 +125,7 @@ end
 def getStorageUsed(id , drive)
   starttime=(DateTime.now.strftime('%Q')).to_s
 require 'yaml' 
-@config = YAML.load_file('config.yml')
+@config = YAML.load_file(Rails.root.join('config/config.yml'))
    response = RestClient::Request.execute method: :get, url: "http://10.102.84.101:8980/opennms/rest/measurements/node["+id+ "].hrStorageIndex["+ drive + "]/hrStorageSize?start=" +starttime, user: 'admin',
      password: 'admin', verify_ssl: false, headers: { content_type: 'application/json', accept: 'application/json'}
   
@@ -182,7 +182,7 @@ end
 
 def isYes(drive)
  require 'yaml' 
-@config = YAML.load_file('D:\Public_safety\dashboard2\config\config.yml')
+ @config = YAML.load_file(Rails.root.join('config/config.yml'))
   if  @config[drive+"_drive"].include? 'yes'
     return true
   else
