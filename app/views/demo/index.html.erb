@@ -74,7 +74,7 @@
 
 								<br> <b>Details</b> <br> <br> <b>></b> Average
 								CPU usage (last 10 mins): <%=getCPUusage(@vmArray[j]['id'])%>%<br>
-								<br> <b>></b> Total Memory used : <%=getPhysicalMemoryUsed(@vmArray[j]['id'])%>% <br />
+								<%# <br> <b>></b> Total Memory used : <%=getPhysicalMemoryUsed(@vmArray[j]['id'])%>% <br />
 								<% if isYes('C')%>
 									<b>></b> Storage Utilized on C drive :
 								 <br />
@@ -126,11 +126,13 @@
 									<br />
 								</div>
 									
- <%for k in 0..((@vmMap.length)-1)%>
+ 							<%for k in 0..((@vmMap[@vmArray[j]['label']].length)-1)%>
 									
+
 									<script>
-																	
-									function colourChnage(env,vm,service) {
+									console.log(<%=k%>)
+
+									function colourChange(env,vm,service) {
 										if('<%=getColor%>' != "red"){
 											if('<%=getColor%>'  != "amber" && colour!="amber"){
 												colour = "green";
@@ -148,17 +150,17 @@
 										
 										
 									}
-									colourChnage('<%=@envArray[i]['name']%>','<%=vmArray[j]['label']%>','<%=vmMap[vmArray[j]['label']][k]['down']%>');
+									colourChange('<%=@envArray[i]['name']%>','<%=@vmArray[j]['label']%>','<%=@vmMap[@vmArray[j]['label']][k]['down']%>');
 									</script>
 								
-<button id="servicenames" class="w3-btn w3-block w3-left-align" colour="<%=@vmMap[vmArray[j]['label']][k]["down"]%>" onclick="myFunction(<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><%=@vmMap[vmArray[j]['label']][k]['serviceType']['name']%>)"></button>>
+<button id="servicenames" class="w3-btn w3-block w3-left-align" colour="<%=@vmMap[@vmArray[j]['label']][k]["down"]%>" onclick="myFunction(<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><%=@vmMap[@vmArray[j]['label']][k]['serviceType']['name']%>)"><b>></b> <%=@vmMap[@vmArray[j]['label']][k]["serviceType"]['name']%></button>
 
 
 									<div
-										id="<%=envArray[i]['name']%><%=vmArray[j]['label']%><<%=@vmMap[vmArray[j]['label']][k]["serviceType"]['name']%>"
+										id="<%=@envArray[i]['name']%><%=@vmArray[j]['label']%><<%=@vmMap[@vmArray[j]['label']][k]["serviceType"]['name']%>"
 										class="w3-container w3-hide" style="padding-left: 40px;">
 
-<%if @vmMap[vmArray[j]['label']][k]["down"]%>
+										<%if @vmMap[@vmArray[j]['label']][k]["down"]%>
 									
 												<b><i>Service is Down</i></b>
 											

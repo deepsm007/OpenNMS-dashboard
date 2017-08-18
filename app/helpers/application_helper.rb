@@ -2,13 +2,13 @@ module ApplicationHelper
 
 	# performance monitor start
 
-storageColorList = Array.new
+$storageColorList = Array.new
 USER = "admin"
 PASSWORD = "admin"
-cpuUsage = ""
-cpuColor = ""
-storageColor = ""
-memoryColor = ""
+$cpuUsage = ""
+$cpuColor = ""
+$storageColor = ""
+$memoryColor = ""
 
 def clearStorageList
     storageColorList = Array.new
@@ -16,17 +16,17 @@ end
 
     def getColor
         x=""
-          if storageColorList.include? 'red'
-            x= "red"
-          elsif !storageColorList.include? 'amber'
+          if $storageColorList.include? 'red'
+            x= "red" 
+          elsif !$storageColorList.include? 'amber'
             x= "green"
           else
               x="amber"
           end
 
-        if cpuColor.include? 'red' || (x.include? 'red') || (memoryColor.include? 'red')
+        if $cpuColor == 'red' || (x== 'red') || ($memoryColor == 'red')
           return "red"
-        elsif cpuColor.include? 'green' || (x.include? 'green') || (memoryColor.include? 'green')
+        elsif $cpuColor == 'green' || (x == 'green') || ($memoryColor == 'green')
           return "green"
         else
           return "amber"
@@ -46,7 +46,7 @@ def getCPUusage(id)
         @cpuPercentBusy_responseData=cpuPercentBusy_response_hash['columns'][0]['values']
       rescue # optionally: `rescue Exception => ex`
         puts 'I am rescued.'
-        cpuColor = "red";
+        $cpuColor = "red";
         averageCPU = 0;
         return averageCPU;
      
@@ -58,7 +58,7 @@ def getCPUusage(id)
       min = @cpuPercentBusy_responseData[0]
       max = @cpuPercentBusy_responseData[0]
       for z in 0..((@cpuPercentBusy_responseData.length)-1) do
-        if !@cpuPercentBusy_responseData[z].include? "NaN"
+        if !@cpuPercentBusy_responseData[z] == "NaN"
           if @cpuPercentBusy_responseData[z] < min 
             min = @cpuPercentBusy_responseData[z]
           end
@@ -70,15 +70,15 @@ def getCPUusage(id)
 
       averageCPU = (min + max) / 2
       if !(averageCPU>=0) 
-        cpuColor = "green";
+        $cpuColor = "green";
         return 0;
       
       if averageCPU <= @config['CPU_minimum_percentage']
-        cpuColor = "green"
+        $cpuColor = "green"
       elsif averageCPU > @config['CPU_minimum_percentage'] && averageCPU <= @config['CPU_maximum_percentage']
-        cpuColor = "amber"
+        $cpuColor = "amber"
       else
-        cpuColor = "red"
+        $cpuColor = "red"
       end
     return averageCPU
 end
@@ -97,7 +97,7 @@ def getPhysicalMemoryUsed(id)
         @hrStorageSize_responseData=hrStorageSize_response_hash['columns'][0]['values']
       rescue # optionally: `rescue Exception => ex`
         puts 'I am rescued.'
-        memoryColor = "red";
+        $memoryColor = "red";
         return 0;
     
     # if x['id']!="235"
@@ -105,7 +105,7 @@ def getPhysicalMemoryUsed(id)
     
         totalMemory = 0
         for z in 0..((@hrStorageSize_responseData.length)-1) do
-          if !@hrStorageSize_responseData[z].include? "NaN"
+          if !@hrStorageSize_responseData[z] ==  "NaN"
             totalMemory = hrStorageSize_responseData[z]
             break
           end
@@ -122,7 +122,7 @@ def getPhysicalMemoryUsed(id)
         count =0
         sum = 0
         for z in 0..((@hrStorageUsed_responseData.length)-1) do
-          if !@hrStorageUsed_responseData[z].include? "NaN"
+          if !@hrStorageUsed_responseData[z] ==  "NaN"
             count++
             sum = sum + @hrStorageUsed_responseData[z]
           end
@@ -134,11 +134,11 @@ def getPhysicalMemoryUsed(id)
         percentmemoryUsed = (memoryUsed * 1.0/totalMemory) * 100.0
 
         if percentmemoryUsed <= @config['Memory_minimum_percentage']
-            memoryColor = "green"
+            $memoryColor = "green"
           elsif percentmemoryUsed > @config['Memory_minimum_percentage'] && percentmemoryUsed <= @config['Memory_maximum_percentage']
-            memoryColor = "amber"
+            $memoryColor = "amber"
           else
-            memoryColor = "red"
+            $memoryColor = "red"
           end
 
           return percentmemoryUsed
@@ -158,7 +158,7 @@ begin  # "try" block
       @hrStorageSize_responseData=hrStorageSize_response_hash['columns'][0]['values']
     rescue # optionally: `rescue Exception => ex`
       puts 'I am rescued.'
-      storageColor = "red";
+      $storageColor = "red";
 			return 0;
   
   # if x['id']!="235"
@@ -166,7 +166,7 @@ begin  # "try" block
 totalStorage = 0
 
     for z in 0..((@hrStorageSize_responseData.length)-1) do
-        if !@hrStorageSize_responseData[z].include? "NaN"
+        if !@hrStorageSize_responseData[z] ==  "NaN"
           totalStorage = @hrStorageSize_responseData[z]
         end
       end
@@ -182,7 +182,7 @@ totalStorage = 0
       count =0
       sum =0
        for z in 0..((@hrStorageSize_responseData.length)-1) do
-        if !@hrStorageSize_responseData[z].include? "NaN"
+        if !@hrStorageSize_responseData[z] ==  "NaN"
           count++
           sum = sum + @hrStorageSize_responseData[z]
         end
@@ -193,14 +193,14 @@ if storageUsed != 0
   percentStorageUsed = (storageUsed * 1.0 / totalStorage) * 100.0
 
    if percentStorageUsed <= @config['Memory_minimum_percentage']
-          memoryColor = "green"
+          $memoryColor = "green"
         elsif percentStorageUsed > @config['Memory_minimum_percentage'] && percentStorageUsed <= @config['Memory_maximum_percentage']
-          memoryColor = "amber"
+          $memoryColor = "amber"
         else
-          memoryColor = "red"
+          $memoryColor = "red"
         end
 
-        storageColorList.push(storageColor)
+        storageColorList.push($storageColor)
 
         return percentStorageUsed
 
@@ -214,7 +214,7 @@ end
 def isYes(drive)
  require 'yaml' 
  @config = YAML.load_file(Rails.root.join('config/config.yml'))
-  if  @config[drive+"_drive"].include? 'yes'
+  if  @config[drive+"_drive"] == 'yes'
     return true
   else
     return false
