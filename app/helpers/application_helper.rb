@@ -72,10 +72,10 @@ def getCPUusage(id)
       if !(averageCPU>=0) 
         $cpuColor = "green";
         return 0;
-      
-      if averageCPU <= @config['CPU_minimum_percentage']
+      puts @config['config']['CPU_minimum_percentage']
+      if averageCPU <= @config['config']['CPU_minimum_percentage']
         $cpuColor = "green"
-      elsif averageCPU > @config['CPU_minimum_percentage'] && averageCPU <= @config['CPU_maximum_percentage']
+      elsif averageCPU > @config['config']['CPU_minimum_percentage'] && averageCPU <= @config['config']['CPU_maximum_percentage']
         $cpuColor = "amber"
       else
         $cpuColor = "red"
@@ -133,9 +133,9 @@ def getPhysicalMemoryUsed(id)
 
         percentmemoryUsed = (memoryUsed * 1.0/totalMemory) * 100.0
 
-        if percentmemoryUsed <= @config['Memory_minimum_percentage']
+        if percentmemoryUsed <= @config['config']['Memory_minimum_percentage']
             $memoryColor = "green"
-          elsif percentmemoryUsed > @config['Memory_minimum_percentage'] && percentmemoryUsed <= @config['Memory_maximum_percentage']
+          elsif percentmemoryUsed > @config['config']['Memory_minimum_percentage'] && percentmemoryUsed <= @config['config']['Memory_maximum_percentage']
             $memoryColor = "amber"
           else
             $memoryColor = "red"
@@ -192,9 +192,9 @@ storageUsed = sum / count
 if storageUsed != 0
   percentStorageUsed = (storageUsed * 1.0 / totalStorage) * 100.0
 
-   if percentStorageUsed <= @config['Memory_minimum_percentage']
+   if percentStorageUsed <= @config['config']['Memory_minimum_percentage']
           $memoryColor = "green"
-        elsif percentStorageUsed > @config['Memory_minimum_percentage'] && percentStorageUsed <= @config['Memory_maximum_percentage']
+        elsif percentStorageUsed > @config['config']['Memory_minimum_percentage'] && percentStorageUsed <= @config['config']['Memory_maximum_percentage']
           $memoryColor = "amber"
         else
           $memoryColor = "red"
@@ -214,11 +214,8 @@ end
 def isYes(drive)
  require 'yaml' 
  @config = YAML.load_file(Rails.root.join('config/config.yml'))
-  if  @config[drive+"_drive"] == 'yes'
-    return true
-  else
-    return false
-  end
+ return @config['config'][drive]
+ 
 
 end
 

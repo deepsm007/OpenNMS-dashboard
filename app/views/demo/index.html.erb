@@ -74,7 +74,7 @@
 
 								<br> <b>Details</b> <br> <br> <b>></b> Average
 								CPU usage (last 10 mins): <%=getCPUusage(@vmArray[j]['id'])%>%<br>
-								<%# <br> <b>></b> Total Memory used : <%=getPhysicalMemoryUsed(@vmArray[j]['id'])%>% <br />
+								<br> <b>></b> Total Memory used : <%# <%=getPhysicalMemoryUsed(@vmArray[j]['id'])%> <br />
 								<% if isYes('C')%>
 									<b>></b> Storage Utilized on C drive :
 								 <br />
